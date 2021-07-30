@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyt.library.dao.BookDao">
+
+    <select id="getBookById" parameterType="int" resultType="com.cyt.library.bean.Book">
+       select * from book where book_id=#{id}
+    </select>
+    <select id="getBookByName" parameterType="String" resultType="com.cyt.library.bean.Book">
+       select * from book where name=#{name}
+    </select>
+    <select id="getAllBook"
+            resultType="com.cyt.library.bean.Book">
+       select * from book
+    </select>
+    <select id="searchBook" resultType="com.cyt.library.bean.Book" parameterType="String">
+       select * from book where name like #{keyword} or type like #{keyword}
+    </select>
+    <delete id="delBook" parameterType="int">
+        delete from  book where book_id=#{id}
+    </delete>
+    <update id="upBook" parameterType="com.cyt.library.bean.Book">
+        update book set name=#{name},content=#{content},type=#{type},book_num_now=#{book_num_now},img=#{img},book_num_all=#{book_num_all},location=#{location}
+       where book_id=#{book_id}
+    </update>
+    <insert id="addBook" parameterType="com.cyt.library.bean.Book">
+        insert into book(name,content,type,book_num_now,img,book_num_all,location) values(#{name},#{content},#{type},#{book_num_now},#{img},#{book_num_all},#{location})
+    </insert>
+</mapper>

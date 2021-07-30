@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyt.library.dao.LogNumDao">
+
+    <select id="getAllUserLogNum" resultType="com.cyt.library.bean.LogNum">
+          SELECT
+         a.user_id as user_id,
+         a.user_name as user_name,
+         a.borrow_num as borrowLog_num,
+         c.default_record_num as default_record_num
+ from(select
+        user.user_id as user_id,
+        user.name as user_name,
+        IFNULL(a1.borrowLog_num,0) as borrow_num
+        from
+        user
+        LEFT JOIN
+        (select
+          user.user_id as user_id,
+          user.name as user_name,
+          COUNT(*) as borrowLog_num
+          from borrowlog LEFT JOIN user on user.user_id=borrowlog.user_id GROUP BY user_id,user_name) as a1
+        ON `user`.user_id=a1.user_id GROUP BY user_id,user_name,borrowLog_num) AS a
+LEFT JOIN
+     (select
+        user.user_id as user_id,
+        user.name as user_name,
+        IFNULL(c1.default_record_num,0) as default_record_num
+        from
+        user
+        LEFT JOIN
+        (select
+          user.user_id as user_id,
+          user.name as user_name,
+          COUNT(*) as default_record_num
+          from default_record LEFT JOIN user on user.user_id=default_record.user_id
+          GROUP BY user_id,user_name) as c1 ON `user`.user_id=c1.user_id GROUP BY user_id,user_name,default_record_num) AS c
+         on a.user_id=c.user_id
+GROUP BY user_id,user_name,borrowLog_num,default_record_num
+
+
+    </select>
+    <select id="searchUserLogNumByKey" resultType="com.cyt.library.bean.LogNum" parameterType="String">
+          SELECT
+         a.user_id as user_id,
+         a.user_name as user_name,
+         a.borrow_num as borrowLog_num,
+         c.default_record_num as default_record_num
+ from(select
+        user.user_id as user_id,
+        user.name as user_name,
+        IFNULL(a1.borrowLog_num,0) as borrow_num
+        from
+        user
+        LEFT JOIN
+        (select
+          user.user_id as user_id,
+          user.name as user_name,
+          COUNT(*) as borrowLog_num
+          from borrowlog LEFT JOIN user on user.user_id=borrowlog.user_id GROUP BY user_id,user_name) as a1
+        ON `user`.user_id=a1.user_id GROUP BY user_id,user_name,borrowLog_num) AS a
+LEFT JOIN
+     (select
+        user.user_id as user_id,
+        user.name as user_name,
+        IFNULL(c1.default_record_num,0) as default_record_num
+        from
+        user
+        LEFT JOIN
+        (select
+          user.user_id as user_id,
+          user.name as user_name,
+          COUNT(*) as default_record_num
+          from default_record LEFT JOIN user on user.user_id=default_record.user_id
+          GROUP BY user_id,user_name) as c1 ON `user`.user_id=c1.user_id GROUP BY user_id,user_name,default_record_num) AS c
+         on a.user_id=c.user_id
+WHERE BINARY a.user_name like #{key}
+GROUP BY user_id,user_name,borrowLog_num,default_record_num
+
+
+    </select>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyt.library.dao.DefaultRecordDao">
+
+
+    <delete id="delDefaultRecord" parameterType="int">
+        delete from  default_record where default_record_id=#{id}
+    </delete>
+    <update id="upDefaultRecord" parameterType="com.cyt.library.bean.DefaultRecord">
+        update default_record set state=#{state}
+       where default_record_id=#{default_record_id}
+    </update>
+    <insert id="addDefaultRecord" parameterType="com.cyt.library.bean.DefaultRecord">
+        insert into default_record(default_record_id,user_id,borrow_id,reason,default_record_date,state) values(#{default_record_id},#{user_id},#{borrow_id},#{reason},#{default_record_date},#{state})
+    </insert>
+    <select id="getUserDRecordNum" resultType="int" parameterType="int">
+       select COUNT(*) from default_record WHERE user_id=#{id} and state='已缴纳'
+    </select>
+    <select id="getDRecordById" resultType="com.cyt.library.bean.DefaultRecord">
+       select * from default_record WHERE default_record_id=#{id}
+    </select>
+    <select id="getUserDRecordHistroyNum" resultType="int" parameterType="int">
+       select COUNT(*) from default_record WHERE user_id=#{id}
+    </select>
+</mapper>

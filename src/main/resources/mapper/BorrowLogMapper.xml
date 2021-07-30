@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyt.library.dao.BorrowLogDao">
+
+
+    <delete id="delBorrowLog" parameterType="int">
+        delete from  borrowlog where borrow_id=#{id}
+    </delete>
+    <update id="upBorrowLog" parameterType="com.cyt.library.bean.BorrowLog">
+        update borrowlog set state=#{state},back_date=#{back_date}
+       where borrow_id=#{borrow_id}
+    </update>
+    <insert id="addBorrowLog" parameterType="com.cyt.library.bean.BorrowLog">
+        insert into borrowlog(user_id,book_id,borrow_date,state,back_date) values(#{user_id},#{book_id},#{borrow_date},#{state},#{back_date})
+    </insert>
+</mapper>

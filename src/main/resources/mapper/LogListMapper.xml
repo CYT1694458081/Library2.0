@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyt.library.dao.LogListDao">
+
+    <select id="getAllBorrowList" resultType="com.cyt.library.bean.LogList">
+        select
+        borrowlog.borrow_id AS log_id,
+        borrowlog.user_id AS user_id,
+        user.name AS user_name,
+        borrowlog.book_id AS book_id,
+        book.name AS book_name,
+        borrowlog.borrow_date AS date,
+        borrowlog.state AS state,
+        borrowlog.back_date AS next_date
+        from user,book,borrowlog
+        where borrowlog.user_id=user.user_id
+        and borrowlog.book_id=book.book_id
+        order by log_id desc
+    </select>
+    <select id="getBorrowListByNameAndState" resultType="com.cyt.library.bean.LogList" parameterType="String">
+        select
+        borrowlog.borrow_id AS log_id,
+        borrowlog.user_id AS user_id,
+        user.name AS user_name,
+        borrowlog.book_id AS book_id,
+        book.name AS book_name,
+        borrowlog.borrow_date AS date,
+        borrowlog.state AS state,
+        borrowlog.back_date AS next_date
+        from user,book,borrowlog
+        where borrowlog.user_id=user.user_id
+        and borrowlog.book_id=book.book_id
+        and BINARY user.name=#{user}
+        and borrowlog.state=#{state}
+        order by log_id desc
+    </select>
+    <select id="getBorrowListByName" resultType="com.cyt.library.bean.LogList" parameterType="String">
+        select
+        borrowlog.borrow_id AS log_id,
+        borrowlog.user_id AS user_id,
+        user.name AS user_name,
+        borrowlog.book_id AS book_id,
+        book.name AS book_name,
+        borrowlog.borrow_date AS date,
+        borrowlog.state AS state,
+        borrowlog.back_date AS next_date
+        from user,book,borrowlog
+        where borrowlog.user_id=user.user_id
+        and borrowlog.book_id=book.book_id
+        and BINARY user.name=#{name}
+        order by log_id desc
+    </select>
+    <select id="searchBorrowListByName" resultType="com.cyt.library.bean.LogList" parameterType="String">
+        select
+        borrowlog.borrow_id AS log_id,
+        borrowlog.user_id AS user_id,
+        user.name AS user_name,
+        borrowlog.book_id AS book_id,
+        book.name AS book_name,
+        borrowlog.borrow_date AS date,
+        borrowlog.state AS state,
+        borrowlog.back_date AS next_date
+        from user,book,borrowlog
+        where borrowlog.user_id=user.user_id
+        and borrowlog.book_id=book.book_id
+        and BINARY user.name like #{name}
+        order by log_id desc
+    </select>
+    <select id="getBorrowListByKey" resultType="com.cyt.library.bean.LogList" parameterType="String">
+        select *
+        from (select
+              borrowlog.borrow_id AS log_id,
+              borrowlog.user_id AS user_id,
+              user.name AS user_name,
+              borrowlog.book_id AS book_id,
+              book.name AS book_name,
+              borrowlog.borrow_date AS date,
+              borrowlog.state AS state,
+              borrowlog.back_date AS next_date
+              from user,book,borrowlog
+              where borrowlog.user_id=user.user_id
+              and borrowlog.book_id=book.book_id) as a
+        where BINARY a.user_name like #{key}
+        or a.book_name like #{key}
+        or a.state like #{key}
+        order by log_id desc
+    </select>
+    <select id="searchUserBorrowListByKey" resultType="com.cyt.library.bean.LogList">
+        select
+        borrowlog.borrow_id AS log_id,
+        borrowlog.user_id AS user_id,
+        user.name AS user_name,
+        borrowlog.book_id AS book_id,
+        book.name AS book_name,
+        borrowlog.borrow_date AS date,
+        borrowlog.state AS state,
+        borrowlog.back_date AS next_date
+        from user,book,borrowlog
+        where borrowlog.user_id=user.user_id and
+              borrowlog.book_id=book.book_id and
+              BINARY user.name=#{user}
+              and (book.name like #{key} or borrowlog.state like #{key})
+        order by log_id desc
+    </select>
+    <select id="searchNowUserBorrowListByBook" resultType="com.cyt.library.bean.LogList">
+        select
+        borrowlog.borrow_id AS log_id,
+        borrowlog.user_id AS user_id,
+        user.name AS user_name,
+        borrowlog.book_id AS book_id,
+        book.name AS book_name,
+        borrowlog.borrow_date AS date,
+        borrowlog.state AS state,
+        borrowlog.back_date AS next_date
+        from user,book,borrowlog
+        where borrowlog.user_id=user.user_id and
+              borrowlog.book_id=book.book_id and
+              BINARY user.name=#{user}
+              and borrowlog.state='在借'
+              and book.name like #{book}
+        order by log_id desc
+    </select>
+    <select id="searchUserBackListByBook" resultType="com.cyt.library.bean.LogList">
+        select
+        borrowlog.borrow_id AS log_id,
+        borrowlog.user_id AS user_id,
+        user.name AS user_name,
+        borrowlog.book_id AS book_id,
+        book.name AS book_name,
+        borrowlog.borrow_date AS date,
+        borrowlog.state AS state,
+        borrowlog.back_date AS next_date
+        from user,book,borrowlog
+        where borrowlog.user_id=user.user_id and
+              borrowlog.book_id=book.book_id and
+              BINARY user.name=#{user}
+              and borrowlog.state='已还'
+              and book.name like #{book}
+        order by log_id desc
+    </select>
+</mapper>
